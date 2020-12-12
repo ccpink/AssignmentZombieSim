@@ -1,3 +1,0 @@
-F:/ZombiesVSHumans/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-F:/ZombiesVSHumans/cmake-build-debug/CMakeFiles/ZombiesVSHumans.dir
-F:/ZombiesVSHumans/cmake-build-debug/CMakeFiles/edit_cache.dir

@@ -5,7 +5,6 @@
 #ifndef ZOMBIESVSHUMANS_ZOMBIE_H
 #define ZOMBIESVSHUMANS_ZOMBIE_H
 
-
 #include "Entity.h"
 
 class Zombie : public Entity {
@@ -16,11 +15,7 @@ public:
     Zombie(int x, int y, int ID);
     std::string turnZombie();
     void move();
-
     void setOpenDirections(std::vector<std::string> directions);
-
-
 };
-
 
 #endif //ZOMBIESVSHUMANS_ZOMBIE_H

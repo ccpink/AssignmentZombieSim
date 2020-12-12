@@ -70,53 +70,28 @@ std::string Zombie::turnZombie() {
     return "";
 }
 
-void Zombie::move(){
-    std::shuffle( openDirections.begin(), openDirections.end() , std::mt19937(std::random_device()()));
-
+void Zombie::move() {
+    std::shuffle(openDirections.begin(), openDirections.end() , std::mt19937(std::random_device()()));
     std::string direction =  openDirections.at(0);
 
-    if (direction == "North")
-    {
+    if (direction == "North") {
         yPosition = yPosition + 1;
-
-
-    }
-    else if(direction == "South")
-    {
+    } else if(direction == "South") {
         yPosition = yPosition - 1 ;
-
-
-    }
-    else if (direction == "East")
-    {
+    } else if (direction == "East") {
         xPosition = xPosition + 1;
-
-    }
-    else if (direction == "West")
-    {
+    } else if (direction == "West") {
         xPosition = xPosition - 1;
-
-    }
-    else if (direction == "North-West")
-    {
+    } else if (direction == "North-West") {
         yPosition = yPosition + 1;
         xPosition = xPosition - 1;
-
-    }
-    else if (direction == "South-West")
-    {
+    } else if (direction == "South-West") {
         yPosition = yPosition - 1;
         xPosition = xPosition - 1;
-
-    }
-    else if (direction == "North-East")
-    {
+    } else if (direction == "North-East") {
         yPosition = yPosition + 1;
         xPosition = xPosition + 1;
-
-    }
-    else if (direction == "South-East")
-    {
+    } else if (direction == "South-East") {
         yPosition = yPosition - 1;
         xPosition = xPosition + 1;
     }

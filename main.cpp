@@ -11,13 +11,15 @@
 #include "classValues.h"
 #include "Entity.h"
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "EndlessLoop"
 using namespace std;
 
 int compGuess = rand() % 20 +1;
 int numOfH = 1;
 int numOfZ = 1;
 bool targeted;
-const int gridSize = 3;
+const int gridSize = 5;
 
 std::vector<Zombie> ListOfAllZombies;
 std::vector<Human> ListOfAllHumans;
@@ -40,12 +42,15 @@ int grid[gridSize][gridSize];
 
 void removeDeadHumans();
 
-// Get a random int between 0-19
-int getRandomNumber(){
+// Get a random int between 0-gridSize
+int getRandomNumber() {
     int nextRandomInt;
+
     while (true) {
+        srand((unsigned) time(0));
         nextRandomInt = (rand() % gridSize) + 0;
-        if( nextRandomInt >= 0 && nextRandomInt < gridSize ){
+
+        if (nextRandomInt >= 0 && nextRandomInt < gridSize) {
             break;
         }
     }
@@ -336,9 +341,6 @@ std::vector<std::string> getOpenSpacesHuman(Human human){
     return openSpaces;
 }
 
-
-
-
 void moveAllZombies() {
     int currXPos;
     int currYPos;
@@ -347,33 +349,31 @@ void moveAllZombies() {
     int newYPos;
 
     for (auto zom : ListOfAllZombies) {
-        std::vector<string> checkIfEmpty = getOpenSpacesZombie(zom);
-        if (!checkIfEmpty.empty()){
-        zom.setOpenDirections(getOpenSpacesZombie(zom));
+        std::vector<string> openSpaces = getOpenSpacesZombie(zom);
+        if (openSpaces.empty()) {
+            continue;
+        }
+
+        zom.setOpenDirections(openSpaces);
 
          currXPos = zom.xPosition;
          currYPos = zom.yPosition;
-        zom.move();
+         zom.move();
          newXPos = zom.xPosition;
          newYPos = zom.yPosition;
 
         //setGridPointEmpty(currXPos, currYPos);
         grid[currXPos][currYPos] = 0;
 
-        grid[currXPos][currYPos] = 2;
+        grid[newXPos][newYPos] = 2;
         //setGridPointZombie(newYPos, newXPos);s
 
         if (targeted) {
             // create a lkist of killed humans
             killedHumans.emplace_back(newXPos,newYPos);
         }
-        }
     }
-
-    }
-
-
-
+}
 
 void moveAllHumans() {
     for (auto hum : ListOfAllHumans) {
@@ -390,33 +390,26 @@ void moveAllHumans() {
             //setGridPointEmpty(currXPos, currYPos);
             grid[currXPos][currYPos] = 0;
             //setGridPointHuman(newYPos, newXPos);
-            grid[currXPos][currYPos] = 1;
-
+            grid[newXPos][newYPos] = 1;
         }
     }
 }
 
+void printOut() {
+    int column = 0;
 
+    for (auto & row : grid) {
+        for (int & value : row) {
+            column += 1;
+            std::cout << value;
 
-void printOut(){
-    int count = 0;
-    for (auto & i : grid)
-    {
-        for (int & j : i)
-        {
-            count += 1;
-            std::cout << j;
-            if (count == gridSize){
-                count = 0;
+            if (column == gridSize) {
+                column = 0;
                 std::cout << "" << endl;
             }
         }
     }
-
 }
-
-
-
 
 int main() {
     // Entities
@@ -438,80 +431,30 @@ int main() {
     }
 
     int iterationNum = 1;
-    std::cout << "" << endl;
-    std::cout << "" << endl;
-    std::cout << "" << endl;
-    std::cout << "" << endl;
+    std::cout << "" << endl << endl << endl << endl;
     std::cout << "Current Iteration: " << endl;
-    std::cout << iterationNum << endl;
-    std::cout << "" << endl;
-    std::cout << "" << endl;
+    std::cout << iterationNum << endl << endl << endl;
     printOut();
 
-    while(true){
+    while(true) {
         startTime = clock();
         counter += startTime - previousTime;
         previousTime = startTime;
-        if(counter>pauseInterval * CLOCKS_PER_SEC)
-        {
+
+        if (counter>pauseInterval * CLOCKS_PER_SEC) {
             moveAllZombies();
-
             removeDeadHumans();
-
             moveAllHumans();
 
             iterationNum +=1;
-            std::cout << "" << endl;
-            std::cout << "" << endl;
+            std::cout << "" << endl << endl;
             std::cout << "Current Iteration: " << endl;
-            std::cout << iterationNum << endl;
-            std::cout << "" << endl;
+            std::cout << iterationNum << endl << endl;
             printOut();
 
             counter = 0;
         }
     }
-
-
-// what the fuck
-
-
-
-    // Move all the entities
-    // Zombies and then Humans
-
-    // Then Recruit and Convert if they can.
-
-
-
-
-
-    moveAllZombies();
-    removeDeadHumans();
-    moveAllHumans();
-
-    iterationNum +=1;
-    std::cout << "" << endl;
-    std::cout << "" << endl;
-    std::cout << "Current Iteration: " << endl;
-    std::cout << iterationNum << endl;
-    std::cout << "" << endl;
-    printOut();
-
-
-    moveAllZombies();
-    removeDeadHumans();
-    moveAllHumans();
-
-    iterationNum +=1;
-    std::cout << "" << endl;
-    std::cout << "" << endl;
-    std::cout << "Current Iteration: " << endl;
-    std::cout << iterationNum << endl;
-    std::cout << "" << endl;
-    printOut();
-
-    return 0;
 }
 
 void removeDeadHumans() {
@@ -521,27 +464,21 @@ void removeDeadHumans() {
     deleteHumanIndex.clear();
 
     count = 0;
-    for(auto human : ListOfAllHumans)
-    {
-        for(const auto & killedHuman : killedHumans) {
+    for (auto human : ListOfAllHumans) {
+        for (const auto & killedHuman : killedHumans) {
             x = killedHuman.first;
             y = killedHuman.second;
 
-            if(human.getXPosition() == x && human.getYPosition() == y){
+            if (human.getXPosition() == x && human.getYPosition() == y) {
                 deleteHumanIndex.push_back(count);
             }
-
         }
         count++;
     }
 
-
-
-    for(auto index : deleteHumanIndex)
-    {
+    for (auto index : deleteHumanIndex) {
         ListOfAllHumans.erase(ListOfAllHumans.begin()+ index);
     }
 }
 
-
-
+#pragma clang diagnostic pop
