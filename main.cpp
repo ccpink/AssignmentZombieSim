@@ -14,9 +14,10 @@
 using namespace std;
 
 int compGuess = rand() % 20 +1;
-int numOfH = 100;
+int numOfH = 50;
 int numOfZ = 8;
 bool targeted;
+const int gridSize = 10;
 
 std::vector<Zombie> ListOfAllZombies;
 std::vector<Human> ListOfAllHumans;
@@ -24,7 +25,7 @@ std::vector<int> deleteHumanIndex;
 
 
 vector < pair<int,int> > killedHumans;
-int grid[20][20];
+int grid[gridSize][gridSize];
 //Bias of movement is caused when a choice of move/eat/breed are based on a non-random
 // selection of the squares around an organism. Think of a tic tac toe grid with an
 // organism in the center. If its routine is always to look around itself starting top
@@ -43,8 +44,8 @@ void removeDeadHumans();
 int getRandomNumber(){
     int nextRandomInt;
     while (true) {
-        nextRandomInt = (rand() % 20) + 0;
-        if( nextRandomInt >= 0 && nextRandomInt < 20 ){
+        nextRandomInt = (rand() % gridSize) + 0;
+        if( nextRandomInt >= 0 && nextRandomInt < gridSize ){
             break;
         }
     }
@@ -81,6 +82,8 @@ void InitializeEntities(int numOfZombies, int numOfHumans){
     int y;
     int count = 0;
     int ID = 0;
+
+
 
     for (int i = 0; i < numOfZombies; i++)
     {
@@ -130,14 +133,14 @@ std::vector<std::string> getOpenSpacesZombie(Zombie zombie) {
     bool canHeadEast = true;
     bool canHeadWest = true;
 
-    if (xPos == 19){
+    if (xPos == gridSize - 1){
         canHeadEast = false;
     }
     if (xPos == 0) {
         canHeadWest = false;
     }
 
-    if (yPos == 19){
+    if (yPos == gridSize - 1){
         canHeadNorth = false;
     }
 
@@ -288,14 +291,14 @@ std::vector<std::string> getOpenSpacesHuman(Human human){
     bool canHeadEast = true;
     bool canHeadWest = true;
 
-    if (xPos == 19){
+    if (xPos == gridSize - 1){
         canHeadEast = false;
     }
     if (xPos == 0) {
         canHeadWest = false;
     }
 
-    if (yPos == 19){
+    if (yPos == gridSize - 1){
         canHeadNorth = false;
     }
 
