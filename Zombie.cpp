@@ -111,7 +111,7 @@ void Zombie::move(){
     }
     else if (direction == "North-East")
     {
-        xPosition = xPosition + 1;
+        yPosition = yPosition + 1;
         xPosition = xPosition + 1;
 
     }
