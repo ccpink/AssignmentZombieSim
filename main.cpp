@@ -100,7 +100,7 @@ void InitializeEntities(int numOfZombies, int numOfHumans){
                 break;
             }
         }
-    }
+    } // what
 
     count = 0;
     for (int i = 0; i < numOfHumans; i++)
@@ -360,7 +360,7 @@ void moveAllZombies() {
         //setGridPointEmpty(currXPos, currYPos);
         grid[currXPos][currYPos] = 0;
 
-        grid[newYPos][newXPos] = 2;
+        grid[currXPos][currYPos] = 2;
         //setGridPointZombie(newYPos, newXPos);s
 
         if (targeted) {
@@ -390,7 +390,7 @@ void moveAllHumans() {
             //setGridPointEmpty(currXPos, currYPos);
             grid[currXPos][currYPos] = 0;
             //setGridPointHuman(newYPos, newXPos);
-            grid[newYPos][newXPos] = 1;
+            grid[currXPos][currYPos] = 1;
 
         }
     }
@@ -455,7 +455,9 @@ int main() {
         if(counter>pauseInterval * CLOCKS_PER_SEC)
         {
             moveAllZombies();
+
             removeDeadHumans();
+
             moveAllHumans();
 
             iterationNum +=1;
