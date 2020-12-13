@@ -18,7 +18,7 @@ public:
     Entity(int x, int y, bool isZombie, int id);
     void resetCounter();
     int getCounter();
-    void incremementCounter();
+    void incrementCounter();
     bool getIsZombie();
     int xPosition;
     int yPosition;

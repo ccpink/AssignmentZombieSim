@@ -10,24 +10,21 @@
 #include "vector"
 #include "classValues.h"
 #include "Entity.h"
+#include <windows.h>
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "EndlessLoop"
 using namespace std;
 
-int compGuess = rand() % 20 +1;
-int numOfH = 1;
-int numOfZ = 1;
+int maxHumans = 2;
+int maxZombie = 1;
 bool targeted;
-const int gridSize = 5;
+const int gridSize = 2;
 
 std::vector<Zombie> ListOfAllZombies;
 std::vector<Human> ListOfAllHumans;
 std::vector<int> deleteHumanIndex;
-
-
 vector < pair<int,int> > killedHumans;
 int grid[gridSize][gridSize];
+
 //Bias of movement is caused when a choice of move/eat/breed are based on a non-random
 // selection of the squares around an organism. Think of a tic tac toe grid with an
 // organism in the center. If its routine is always to look around itself starting top
@@ -40,93 +37,63 @@ int grid[gridSize][gridSize];
 //
 //Humans randomly move all the time.
 
+// removal of all the dead human entities
 void removeDeadHumans();
 
 // Get a random int between 0-gridSize
 int getRandomNumber() {
-    int nextRandomInt;
-
-    while (true) {
-        srand((unsigned) time(0));
-        nextRandomInt = (rand() % gridSize) + 0;
-
-        if (nextRandomInt >= 0 && nextRandomInt < gridSize) {
-            break;
-        }
-    }
-    return nextRandomInt;
+    srand((unsigned) GetTickCount());
+    return rand() % gridSize;
 }
 
 // Set the grid to all ones
 void InitializeGrid(){
-    for (auto & i : grid)
+    for (auto &i : grid)
     {
-        for (int & j : i)
+        for (int &j : i)
         {
             j = 0; // Null Pointers
         }
     }
 }
 
-// Get the value at a point on the grid
-
-
-void setGridPointZombie(int x, int y){
-    grid[x][y] = 2;  // Change to a pointer to a zombie //
-}
-
-void setGridPointHuman(int x, int y){
-    grid[x][y] = 1; // Change to a pointer of a human //
-}
-
-
-
-
+// Initialize all the zombie and human entities
 void InitializeEntities(int numOfZombies, int numOfHumans){
     int x;
     int y;
-    int count = 0;
     int ID = 0;
 
-
-
-    for (int i = 0; i < numOfZombies; i++)
-    {
-        while (true){
+    for (int i = 0; i < numOfZombies; i++) {
+        while (true) {
             x = getRandomNumber();
             y = getRandomNumber();
 
-            if (grid[x][y] == 0){
-                ListOfAllZombies.emplace_back(Zombie(x,y,ID));
-
-
-                count +=1;
-                ID +=1;
+            if (grid[x][y] == 0) {
+                ListOfAllZombies.emplace_back(Zombie(x, y, ID));
+                grid[x][y] = 2;
+                ID++;
                 break;
             }
         }
-    } // what
+    }
 
-    count = 0;
-    for (int i = 0; i < numOfHumans; i++)
-    {
-
-        while (true){
+    ID = 0;
+    for (int i = 0; i < numOfHumans; i++) {
+        while (true) {
             x = getRandomNumber();
             y = getRandomNumber();
 
-            if (grid[x][y] == 0){
-                ListOfAllHumans.emplace_back(Human(x,y,ID));
-
-                count +=1;
-                ID +=1;
+            if (grid[x][y] == 0) {
+                ListOfAllHumans.emplace_back(Human(x, y, ID));
+                grid[x][y] = 1;
+                ID++;
                 break;
             }
         }
     }
 }
 
-
+// Get the open spaces for the zombie
 std::vector<std::string> getOpenSpacesZombie(Zombie zombie) {
     int xPos = zombie.getXPosition();
     int yPos = zombie.getYPosition();
@@ -138,14 +105,17 @@ std::vector<std::string> getOpenSpacesZombie(Zombie zombie) {
     bool canHeadEast = true;
     bool canHeadWest = true;
 
-    if (xPos == gridSize - 1){
+
+    // Get the cardinal directions the entity can go
+    if (xPos == gridSize - 1) {
         canHeadEast = false;
     }
+
     if (xPos == 0) {
         canHeadWest = false;
     }
 
-    if (yPos == gridSize - 1){
+    if (yPos == gridSize - 1) {
         canHeadNorth = false;
     }
 
@@ -153,18 +123,17 @@ std::vector<std::string> getOpenSpacesZombie(Zombie zombie) {
         canHeadSouth = false;
     }
 
-
-    // If Zombie
-
+    // Get the directions the entity can go
     if (canHeadNorth) {
-        if (grid[xPos][yPos + 1] == 1)// North
+        if (grid[xPos][yPos + 1] == 1)
         {
             openSpaces.emplace_back("North");
             targeted = true;
         }
     }
+
     if (canHeadSouth) {
-        if (grid[xPos][yPos - 1] == 1) // South
+        if (grid[xPos][yPos - 1] == 1)
         {
             openSpaces.emplace_back("South");
             targeted = true;
@@ -172,7 +141,7 @@ std::vector<std::string> getOpenSpacesZombie(Zombie zombie) {
     }
 
     if (canHeadEast) {
-        if (grid[xPos + 1][yPos] == 1) // East
+        if (grid[xPos + 1][yPos] == 1)
         {
             openSpaces.emplace_back("East");
             targeted = true;
@@ -220,62 +189,62 @@ std::vector<std::string> getOpenSpacesZombie(Zombie zombie) {
     }
 
     // if there is a target**
-    if (targeted){
+    if (targeted) {
         return openSpaces;
     }
 
     // If There are no humans to eat or targets
     if (canHeadNorth){
-        if (grid[xPos][yPos + 1] == 0)// North
+        if (grid[xPos][yPos + 1] == 0)
         {
             openSpaces.emplace_back("North");
         }
     }
 
     if (canHeadSouth){
-        if (grid[xPos][yPos - 1] == 0) // South
+        if (grid[xPos][yPos - 1] == 0)
         {
             openSpaces.emplace_back("South");
         }
     }
 
     if (canHeadEast) {
-        if (grid[xPos + 1][yPos] == 0) // East
+        if (grid[xPos + 1][yPos] == 0)
         {
             openSpaces.emplace_back("East");
         }
     }
 
     if (canHeadWest){
-        if (grid[xPos - 1][yPos] == 0) // West // == NULLPOINTER
+        if (grid[xPos - 1][yPos] == 0)
         {
             openSpaces.emplace_back("West");
         }
     }
 
     if (canHeadNorth && canHeadWest){
-        if (grid[xPos - 1][yPos + 1] == 0) //North-West
+        if (grid[xPos - 1][yPos + 1] == 0)
         {
             openSpaces.emplace_back("North-West");
         }
     }
 
     if (canHeadNorth && canHeadEast) {
-        if (grid[xPos + 1][yPos + 1] == 0) //North-East
+        if (grid[xPos + 1][yPos + 1] == 0)
         {
             openSpaces.emplace_back("North-East");
         }
     }
 
     if (canHeadSouth && canHeadEast) {
-        if (grid[xPos + 1][yPos - 1] == 0) //South-West
+        if (grid[xPos + 1][yPos - 1] == 0)
         {
             openSpaces.emplace_back("South-East");
         }
     }
 
     if (canHeadSouth && canHeadWest) {
-        if (grid[xPos - 1][yPos + 1] == 0) //North-East
+        if (grid[xPos - 1][yPos + 1] == 0)
         {
             openSpaces.emplace_back("South-West");
         }
@@ -284,11 +253,10 @@ std::vector<std::string> getOpenSpacesZombie(Zombie zombie) {
 }
 
 
-
-std::vector<std::string> getOpenSpacesHuman(Human human){
+// Get the open spaces the Human can go
+std::vector<std::string> getOpenSpacesHuman(Human human) {
     int xPos = human.getXPosition();
     int yPos = human.getYPosition();
-    targeted = false; // Zombie
     vector<std::string> openSpaces; // Open or targets
 
     bool canHeadNorth = true;
@@ -296,14 +264,16 @@ std::vector<std::string> getOpenSpacesHuman(Human human){
     bool canHeadEast = true;
     bool canHeadWest = true;
 
-    if (xPos == gridSize - 1){
+    // Get the cardinal directions the entity can go
+    if (xPos == gridSize - 1) {
         canHeadEast = false;
     }
+
     if (xPos == 0) {
         canHeadWest = false;
     }
 
-    if (yPos == gridSize - 1){
+    if (yPos == gridSize - 1) {
         canHeadNorth = false;
     }
 
@@ -311,36 +281,35 @@ std::vector<std::string> getOpenSpacesHuman(Human human){
         canHeadSouth = false;
     }
 
-    if (canHeadNorth){
-        if (grid[xPos][yPos + 1] == 0)// North
-        {
+    // Get the directions the entity can go
+    if (canHeadNorth) {
+        if (grid[xPos][yPos + 1] == 0) {
             openSpaces.emplace_back("North");
         }
     }
 
-    if (canHeadSouth){
-        if (grid[xPos][yPos - 1] == 0) // South
-        {
+    if (canHeadSouth) {
+        if (grid[xPos][yPos - 1] == 0) {
             openSpaces.emplace_back("South");
         }
     }
 
     if (canHeadEast) {
-        if (grid[xPos + 1][yPos] == 0) // East
-        {
+        if (grid[xPos + 1][yPos] == 0) {
             openSpaces.emplace_back("East");
         }
     }
 
     if (canHeadWest){
-        if (grid[xPos - 1][yPos] == 0) // West // == NULLPOINTER
-        {
+        if (grid[xPos - 1][yPos] == 0) {
             openSpaces.emplace_back("West");
         }
     }
+
     return openSpaces;
 }
 
+// Move all the zombie entities
 void moveAllZombies() {
     int currXPos;
     int currYPos;
@@ -348,64 +317,70 @@ void moveAllZombies() {
     int newXPos;
     int newYPos;
 
-    for (auto zom : ListOfAllZombies) {
-        std::vector<string> openSpaces = getOpenSpacesZombie(zom);
+    for (auto &zombie : ListOfAllZombies) {
+        std::vector<string> openSpaces = getOpenSpacesZombie(zombie);
+
         if (openSpaces.empty()) {
             continue;
         }
 
-        zom.setOpenDirections(openSpaces);
+        zombie.setOpenDirections(openSpaces);
 
-         currXPos = zom.xPosition;
-         currYPos = zom.yPosition;
-         zom.move();
-         newXPos = zom.xPosition;
-         newYPos = zom.yPosition;
+        currXPos = zombie.xPosition;
+        currYPos = zombie.yPosition;
+        zombie.move();
+        newXPos = zombie.xPosition;
+        newYPos = zombie.yPosition;
 
-        //setGridPointEmpty(currXPos, currYPos);
         grid[currXPos][currYPos] = 0;
-
         grid[newXPos][newYPos] = 2;
-        //setGridPointZombie(newYPos, newXPos);s
+
+        pair<int,int> aPair;
+        aPair.first = newXPos;
+        aPair.second = newYPos;
 
         if (targeted) {
-            // create a lkist of killed humans
-            killedHumans.emplace_back(newXPos,newYPos);
+            killedHumans.emplace_back(aPair);
         }
     }
 }
 
+// Move all the human entities
 void moveAllHumans() {
-    for (auto hum : ListOfAllHumans) {
-        std::vector<string> checkIfEmpty = getOpenSpacesHuman(hum);
-        if (!checkIfEmpty.empty()) {
-            hum.setOpenDirections(getOpenSpacesHuman(hum));
+    for (auto &human : ListOfAllHumans) {
+        std::vector<string> openHumanSpaces = getOpenSpacesHuman(human);
 
-            int currXPos = hum.xPosition;
-            int currYPos = hum.yPosition;
-            hum.move();
-            int newXPos = hum.xPosition;
-            int newYPos = hum.yPosition;
-
-            //setGridPointEmpty(currXPos, currYPos);
-            grid[currXPos][currYPos] = 0;
-            //setGridPointHuman(newYPos, newXPos);
-            grid[newXPos][newYPos] = 1;
+        if (openHumanSpaces.empty()) {
+            continue;
         }
+
+        human.setOpenDirections(openHumanSpaces);
+
+        int currXPos = human.xPosition;
+        int currYPos = human.yPosition;
+        human.move();
+        int newXPos = human.xPosition;
+        int newYPos = human.yPosition;
+
+        grid[currXPos][currYPos] = 0;
+        grid[newXPos][newYPos] = 1;
     }
 }
 
+//Print out the 2d array
 void printOut() {
     int column = 0;
 
-    for (auto & row : grid) {
-        for (int & value : row) {
-            column += 1;
-            std::cout << value;
+    for (auto &row : grid) {
+        for (int &value : row) {
+            column++;
+
+            string status = (value == 0) ? "_" : to_string(value);
+            cout << status;
 
             if (column == gridSize) {
                 column = 0;
-                std::cout << "" << endl;
+                cout << "" << endl;
             }
         }
     }
@@ -415,20 +390,12 @@ int main() {
     // Entities
     InitializeGrid();
     // Entities on Grid
-    InitializeEntities(numOfZ,numOfH);
+    InitializeEntities(maxZombie, maxHumans);
 
     double counter = 0;
     double pauseInterval = 5;
     clock_t startTime = clock();
     clock_t previousTime = startTime;
-
-    for (auto human : ListOfAllHumans) {
-        setGridPointHuman(human.xPosition,human.yPosition);
-    }
-
-    for (auto zombie : ListOfAllZombies) {
-        setGridPointZombie(zombie.xPosition,zombie.yPosition);
-    }
 
     int iterationNum = 1;
     std::cout << "" << endl << endl << endl << endl;
@@ -441,12 +408,12 @@ int main() {
         counter += startTime - previousTime;
         previousTime = startTime;
 
-        if (counter>pauseInterval * CLOCKS_PER_SEC) {
+        if (counter > (pauseInterval * CLOCKS_PER_SEC)) {
             moveAllZombies();
             removeDeadHumans();
             moveAllHumans();
 
-            iterationNum +=1;
+            iterationNum++;
             std::cout << "" << endl << endl;
             std::cout << "Current Iteration: " << endl;
             std::cout << iterationNum << endl << endl;
@@ -456,7 +423,8 @@ int main() {
         }
     }
 }
-
+// Remove all the dead humans
+// Currently doesn't work :) the zombies end up dying
 void removeDeadHumans() {
     int count = 0;
     int x;
@@ -464,21 +432,19 @@ void removeDeadHumans() {
     deleteHumanIndex.clear();
 
     count = 0;
-    for (auto human : ListOfAllHumans) {
-        for (const auto & killedHuman : killedHumans) {
+    for (auto &human : ListOfAllHumans) {
+        for (auto &killedHuman : killedHumans) {
             x = killedHuman.first;
             y = killedHuman.second;
 
             if (human.getXPosition() == x && human.getYPosition() == y) {
-                deleteHumanIndex.push_back(count);
+                deleteHumanIndex.emplace_back(count);
             }
         }
         count++;
     }
 
-    for (auto index : deleteHumanIndex) {
-        ListOfAllHumans.erase(ListOfAllHumans.begin()+ index);
+    for (auto &index : deleteHumanIndex) {
+        ListOfAllHumans.erase(ListOfAllHumans.begin() + index);
     }
 }
-
-#pragma clang diagnostic pop
