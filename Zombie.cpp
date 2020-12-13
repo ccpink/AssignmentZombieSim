@@ -12,7 +12,7 @@
 
 
 //Zombie Constructor
-Zombie::Zombie(int x, int y, int ID) : Entity(x, y, true, ID) {
+Zombie::Zombie(int x, int y) : Entity(x, y) {
 
 }
 
@@ -20,7 +20,7 @@ Zombie::Zombie(int x, int y, int ID) : Entity(x, y, true, ID) {
 std::string Zombie::turnZombie() {
     std::string direction =  openDirections.at(rand() % openDirections.size());
 
-    if (getCounter() == 8) {
+    if ((getCounter() - 1) == 8) {
         if (direction == "North") {
             resetCounter();
             return "North";
@@ -76,11 +76,35 @@ void Zombie::move() {
         yPosition = yPosition - 1;
         xPosition = xPosition + 1;
     }
-
+    incrementHunger();
     incrementCounter();
 }
 
 void Zombie::setOpenDirections(std::vector<std::string> directions) {
     openDirections = std::move(directions);
 }
+
+bool Zombie::isStarved() {
+    bool starved = false;
+
+    if ((lastEaten - 1) == 3)
+        starved = true;
+
+    return starved;
+}
+
+void Zombie::resetHunger() {
+    lastEaten = 0;
+}
+
+void Zombie::incrementHunger() {
+    lastEaten++;
+}
+
+bool Zombie::canTurn() {
+    return ((getCounter() - 1) == 8);
+}
+
+Zombie::~Zombie() = default;
+
 

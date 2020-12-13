@@ -12,21 +12,18 @@
 class Entity {
 
 private:
-    bool isZombie;
-    int counter;
+    int counter = 0;
 public:
-    Entity(int x, int y, bool isZombie, int id);
+    Entity(int x, int y);
     void resetCounter();
     int getCounter();
     void incrementCounter();
-    bool getIsZombie();
+    virtual void move() = 0;
     int xPosition;
     int yPosition;
-    int id;
     int getXPosition();
     int getYPosition();
-    void setXPosition(int x);
-    void setYPosition(int y);
+    ~Entity();
 };
 
 

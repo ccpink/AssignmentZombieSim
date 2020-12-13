@@ -3,3 +3,7 @@
 //
 
 #include "classValues.h"
+
+classValues::classValues() {
+
+}

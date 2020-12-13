@@ -11,7 +11,7 @@
 #include <ctime>        // std::time
 #include <cstdlib>      // std::rand, std::srand
 // Human Constructor
-Human::Human(int x1, int x2, int ID) : Entity(x1, x2, false, ID) {
+Human::Human(int x1, int x2) : Entity(x1, x2) {
 
 }
 
@@ -41,7 +41,7 @@ void Human::setOpenDirections(std::vector<std::string> directions) {
 std::string Human::recruitHuman() {
     std::string direction =  openDirections.at(rand() % openDirections.size());
 
-    if (getCounter() == 8) {
+    if ((getCounter() - 1) == 3) {
         if (direction == "North") {
             resetCounter();
             return "North";
@@ -55,7 +55,16 @@ std::string Human::recruitHuman() {
             resetCounter();
             return "West";
         }
+
+
+
     }
 
     return "";
 }
+
+bool Human::canRecruit() {
+    return ((getCounter() - 1) == 3);
+}
+
+Human::~Human() = default;

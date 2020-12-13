@@ -15,17 +15,13 @@ int Entity::getCounter() {
 }
 
 // Entity Constructor
-Entity::Entity(int x, int y, bool isZombie, int ID) {
+Entity::Entity(int x, int y) {
     this->xPosition = x;
     this->yPosition = y;
-    this->isZombie = isZombie;
-    this->id = ID;
 }
 
 // Is it a zombie really??? No
-bool Entity::getIsZombie() {
-    return isZombie;
-}
+
 
 // Get the x position I never use this :)
 int Entity::getXPosition() {
@@ -37,17 +33,9 @@ int Entity::getYPosition() {
     return yPosition;
 }
 
-// Set the y position I never use this :)
-void Entity::setYPosition(int y) {
-    yPosition = y;
-}
-
-// Set the x position I never use this :)
-void Entity::setXPosition(int x) {
-    xPosition = x;
-}
-
 // Increment the counter :)
 void Entity::incrementCounter() {
     counter++;
 }
+
+Entity::~Entity() = default;

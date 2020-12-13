@@ -12,11 +12,13 @@ class Human: public Entity {
 private:
     std::vector<std::string> openDirections;
 public:
-    Human(int x1, int x2, int ID);
+    Human(int x1, int x2);
 
     void setOpenDirections(std::vector<std::string> directions);
     std::string recruitHuman();
-    void move();
+    void move() override;
+    bool canRecruit();
+    ~Human();
 };
 
 

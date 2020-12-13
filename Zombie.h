@@ -11,10 +11,21 @@ class Zombie : public Entity {
 
 private:
     std::vector<std::string> openDirections;
+    int lastEaten;
 public:
-    Zombie(int x, int y, int ID);
+    Zombie(int x, int y);
+    ~Zombie();
     std::string turnZombie();
-    void move();
+
+    void incrementHunger();
+
+    void resetHunger();
+
+    bool isStarved();
+    bool canTurn();
+
+    void move() override;
+
     void setOpenDirections(std::vector<std::string> directions);
 };
 
