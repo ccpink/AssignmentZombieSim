@@ -38,4 +38,13 @@ void Entity::incrementCounter() {
     counter++;
 }
 
+void Entity::setOpenDirections(std::vector<std::string> directions) {
+    openDirections = directions;
+}
+
+std::string Entity::getRandomDirection()
+{
+    return ! openDirections.empty() ? openDirections.at(rand() % openDirections.size()) : "";
+}
+
 Entity::~Entity() = default;

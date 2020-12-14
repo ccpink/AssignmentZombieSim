@@ -5,16 +5,18 @@
 #ifndef ZOMBIESVSHUMANS_ENTITY_H
 #define ZOMBIESVSHUMANS_ENTITY_H
 
+#include <vector>
+#include <string>
 
-
-
-
-class Entity {
-
-private:
+class Entity
+{
+protected:
     int counter = 0;
+    std::vector<std::string> openDirections;
+    std::string getRandomDirection();
 public:
     Entity(int x, int y);
+
     void resetCounter();
     int getCounter();
     void incrementCounter();
@@ -23,8 +25,9 @@ public:
     int yPosition;
     int getXPosition();
     int getYPosition();
+    void setOpenDirections(std::vector<std::string> directions);
+
     ~Entity();
 };
-
 
 #endif //ZOMBIESVSHUMANS_ENTITY_H

@@ -8,13 +8,11 @@
 #include "vector"
 #include "Entity.h"
 
-class Human: public Entity {
-private:
-    std::vector<std::string> openDirections;
+class Human: public Entity
+{
 public:
     Human(int x1, int x2);
 
-    void setOpenDirections(std::vector<std::string> directions);
     std::string recruitHuman();
     void move() override;
     bool canRecruit();

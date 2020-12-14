@@ -19,9 +19,13 @@ Human::Human(int x1, int x2) : Entity(x1, x2)
 //Human move function
 void Human::move()
 {
-    std::string direction =  openDirections.at(rand() % openDirections.size());
+    incrementCounter();
 
-    if (direction == "North") {
+    std::string direction = getRandomDirection();
+
+    if (direction == "") {
+        return;
+    } else if(direction == "North") {
         yPosition = yPosition + 1;
     } else if(direction == "South") {
         yPosition = yPosition - 1 ;
@@ -30,22 +34,14 @@ void Human::move()
     } else if (direction == "West") {
         xPosition = xPosition - 1;
     }
-
-    incrementCounter();
-}
-
-// Set the directions the human can go
-void Human::setOpenDirections(std::vector<std::string> directions)
-{
-    openDirections = directions;
 }
 
 // Recruit a human
 std::string Human::recruitHuman()
 {
-    std::string direction =  openDirections.at(rand() % openDirections.size());
+    std::string direction = getRandomDirection();
 
-    if ((getCounter() - 1) == 3) {
+    if (getCounter() - 1 == 3) {
         if (direction == "North") {
             resetCounter();
             return "North";

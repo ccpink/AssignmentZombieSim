@@ -52,10 +52,21 @@ std::string Zombie::turnZombie() {
 }
 
 // Move all zombies
-void Zombie::move() {
-    std::string direction = openDirections.at(rand() % openDirections.size());
+void Zombie::move()
+{
+    if (hasTarget()) {
+        resetHunger();
+    } else {
+        incrementHunger();
+    }
 
-    if (direction == "North") {
+    incrementCounter();
+
+    std::string direction = getRandomDirection();
+
+    if (direction == "") {
+        return;
+    } else if (direction == "North") {
         yPosition = yPosition + 1;
     } else if(direction == "South") {
         yPosition = yPosition - 1 ;
@@ -76,13 +87,6 @@ void Zombie::move() {
         yPosition = yPosition - 1;
         xPosition = xPosition + 1;
     }
-
-    incrementHunger();
-    incrementCounter();
-}
-
-void Zombie::setOpenDirections(std::vector<std::string> directions) {
-    openDirections = directions;
 }
 
 bool Zombie::isStarved()

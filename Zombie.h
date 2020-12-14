@@ -10,7 +10,6 @@
 class Zombie : public Entity {
 
 private:
-    std::vector<std::string> openDirections;
     int _lastEaten = 0;
     bool _hasTarget = false;
 public:
@@ -31,8 +30,6 @@ public:
     bool canTurn();
 
     void move() override;
-
-    void setOpenDirections(std::vector<std::string> directions);
 };
 
 #endif //ZOMBIESVSHUMANS_ZOMBIE_H
