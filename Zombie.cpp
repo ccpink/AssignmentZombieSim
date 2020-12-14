@@ -53,7 +53,7 @@ std::string Zombie::turnZombie() {
 
 // Move all zombies
 void Zombie::move() {
-    std::string direction =  openDirections.at(rand() % openDirections.size());
+    std::string direction = openDirections.at(rand() % openDirections.size());
 
     if (direction == "North") {
         yPosition = yPosition + 1;
@@ -76,33 +76,52 @@ void Zombie::move() {
         yPosition = yPosition - 1;
         xPosition = xPosition + 1;
     }
+
     incrementHunger();
     incrementCounter();
 }
 
 void Zombie::setOpenDirections(std::vector<std::string> directions) {
-    openDirections = std::move(directions);
+    openDirections = directions;
 }
 
-bool Zombie::isStarved() {
-    bool starved = false;
-
-    if ((lastEaten - 1) == 3)
-        starved = true;
-
-    return starved;
+bool Zombie::isStarved()
+{
+    return _lastEaten - 1 == 3;
 }
 
-void Zombie::resetHunger() {
-    lastEaten = 0;
+void Zombie::resetHunger()
+{
+    _lastEaten = 0;
 }
 
-void Zombie::incrementHunger() {
-    lastEaten++;
+void Zombie::incrementHunger()
+{
+    _lastEaten++;
 }
 
-bool Zombie::canTurn() {
-    return ((getCounter() - 1) == 8);
+int Zombie::getLastEaten() {
+    return _lastEaten;
+}
+
+bool Zombie::canTurn()
+{
+    return ((getCounter() - 1) >= 8);
+}
+
+void Zombie::setTargeting()
+{
+    _hasTarget = true;
+}
+
+void Zombie::loseTarget()
+{
+    _hasTarget = false;
+}
+
+bool Zombie::hasTarget()
+{
+    return _hasTarget;
 }
 
 Zombie::~Zombie() = default;

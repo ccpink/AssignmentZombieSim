@@ -11,17 +11,23 @@ class Zombie : public Entity {
 
 private:
     std::vector<std::string> openDirections;
-    int lastEaten;
+    int _lastEaten = 0;
+    bool _hasTarget = false;
 public:
     Zombie(int x, int y);
     ~Zombie();
     std::string turnZombie();
 
     void incrementHunger();
+    void setTargeting();
 
     void resetHunger();
+    void loseTarget();
+
+    int getLastEaten();
 
     bool isStarved();
+    bool hasTarget();
     bool canTurn();
 
     void move() override;
