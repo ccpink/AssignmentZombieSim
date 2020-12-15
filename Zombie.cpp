@@ -10,45 +10,40 @@
 #include <random>
 #include <algorithm>    // std::random_shuffle
 
-
-//Zombie Constructor
-Zombie::Zombie(int x, int y) : Entity(x, y) {
-
-}
+Zombie::Zombie(int x, int y) : Entity(x, y) {}
 
 // Get a direction for the human that is being turned into a zombie
-std::string Zombie::turnZombie() {
-    std::string direction =  openDirections.at(rand() % openDirections.size());
+std::string Zombie::turnZombie()
+{
+    std::string direction = getRandomDirection();
 
-    if ((getCounter() - 1) == 8) {
-        if (direction == "North") {
-            resetCounter();
-            return "North";
-        } else if(direction == "South") {
-            resetCounter();
-            return "South";
-        } else if (direction == "East") {
-            resetCounter();
-            return "East";
-        } else if (direction == "West") {
-            resetCounter();
-            return "West";
-        } else if (direction == "North-West") {
-            resetCounter();
-            return "North-West";
-        } else if (direction == "South-West") {
-            resetCounter();
-            return "South-West";
-        } else if (direction == "North-East") {
-            resetCounter();
-            return "North-East";
-        } else if (direction == "South-East") {
-            resetCounter();
-            return "South-East";
-        }
+    if (direction == "North") {
+        resetCounter();
+        return "North";
+    } else if(direction == "South") {
+        resetCounter();
+        return "South";
+    } else if (direction == "East") {
+        resetCounter();
+        return "East";
+    } else if (direction == "West") {
+        resetCounter();
+        return "West";
+    } else if (direction == "North-West") {
+        resetCounter();
+        return "North-West";
+    } else if (direction == "South-West") {
+        resetCounter();
+        return "South-West";
+    } else if (direction == "North-East") {
+        resetCounter();
+        return "North-East";
+    } else if (direction == "South-East") {
+        resetCounter();
+        return "South-East";
     }
 
-    return "Your Stupid :)";
+    return "You're Stupid :)";
 }
 
 // Move all zombies
@@ -64,34 +59,35 @@ void Zombie::move()
 
     std::string direction = getRandomDirection();
 
-    if (direction == "") {
-        return;
-    } else if (direction == "North") {
-        yPosition = yPosition + 1;
+    int x = _xPosition;
+    int y = _yPosition;
+
+    if (direction == "North") {
+        _yPosition = _yPosition - 1;
     } else if(direction == "South") {
-        yPosition = yPosition - 1 ;
+        _yPosition = _yPosition + 1;
     } else if (direction == "East") {
-        xPosition = xPosition + 1;
+        _xPosition = _xPosition + 1;
     } else if (direction == "West") {
-        xPosition = xPosition - 1;
+        _xPosition = _xPosition - 1;
     } else if (direction == "North-West") {
-        yPosition = yPosition + 1;
-        xPosition = xPosition - 1;
+        _yPosition = _yPosition - 1;
+        _xPosition = _xPosition - 1;
     } else if (direction == "South-West") {
-        yPosition = yPosition - 1;
-        xPosition = xPosition - 1;
+        _yPosition = _yPosition + 1;
+        _xPosition = _xPosition - 1;
     } else if (direction == "North-East") {
-        yPosition = yPosition + 1;
-        xPosition = xPosition + 1;
+        _yPosition = _yPosition - 1;
+        _xPosition = _xPosition + 1;
     } else if (direction == "South-East") {
-        yPosition = yPosition - 1;
-        xPosition = xPosition + 1;
+        _yPosition = _yPosition + 1;
+        _xPosition = _xPosition + 1;
     }
 }
 
 bool Zombie::isStarved()
 {
-    return _lastEaten - 1 == 3;
+    return (_lastEaten - 1 >= 3);
 }
 
 void Zombie::resetHunger()
@@ -110,7 +106,7 @@ int Zombie::getLastEaten() {
 
 bool Zombie::canTurn()
 {
-    return ((getCounter() - 1) >= 8);
+    return getCounter() - 1 >= 8;
 }
 
 void Zombie::setTargeting()

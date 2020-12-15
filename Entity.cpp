@@ -4,41 +4,53 @@
 
 #include "Entity.h"
 
+int Entity::idCounter = 0;
+
+// Entity Constructor
+Entity::Entity(int x, int y)
+{
+    this->_xPosition = x;
+    this->_yPosition = y;
+    _id = ++idCounter;
+}
+
 // Set the counter to 0
-void Entity::resetCounter() {
+void Entity::resetCounter()
+{
     counter = 0;
 }
 
 // Get the counter
-int Entity::getCounter() {
+int Entity::getCounter()
+{
     return counter;
 }
 
-// Entity Constructor
-Entity::Entity(int x, int y) {
-    this->xPosition = x;
-    this->yPosition = y;
-}
-
-// Is it a zombie really??? No
-
-
 // Get the x position I never use this :)
-int Entity::getXPosition() {
-    return xPosition;
+int Entity::xPosition()
+{
+    return _xPosition;
 }
 
 // Get the y position I never use this :)
-int Entity::getYPosition() {
-    return yPosition;
+int Entity::yPosition()
+{
+    return _yPosition;
+}
+
+int Entity::id()
+{
+    return _id;
 }
 
 // Increment the counter :)
-void Entity::incrementCounter() {
+void Entity::incrementCounter()
+{
     counter++;
 }
 
-void Entity::setOpenDirections(std::vector<std::string> directions) {
+void Entity::setOpenDirections(std::vector<std::string> directions)
+{
     openDirections = directions;
 }
 

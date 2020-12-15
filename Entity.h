@@ -10,7 +10,12 @@
 
 class Entity
 {
+private:
+    int _id;
+    static int idCounter;
 protected:
+    int _xPosition;
+    int _yPosition;
     int counter = 0;
     std::vector<std::string> openDirections;
     std::string getRandomDirection();
@@ -21,10 +26,9 @@ public:
     int getCounter();
     void incrementCounter();
     virtual void move() = 0;
-    int xPosition;
-    int yPosition;
-    int getXPosition();
-    int getYPosition();
+    int xPosition();
+    int yPosition();
+    int id();
     void setOpenDirections(std::vector<std::string> directions);
 
     ~Entity();
